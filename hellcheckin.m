@@ -8,18 +8,32 @@ Things to change:
 
 2. remove the input changes within the function, create your own function
 to be run
-
 %}
 
-function hellcheckin(collect_point,onceaday)
+function hellcheckin(collect_point,varargin)
 
 %INPUTS:
 % none: just shows you historical data
 %   use case: hellcheckin
 % collect_point=1: collects a point
 %   use case: hellcheckin(1)
-% onceaday=1: only collects one point a day
-%   use case: hellcheckin([],1) or (1,1)
+%
+% Varargin:
+% 'AxTitles': {north_title, south_title, east_title, west_title}
+% 'Colormap': 256x3 colormap
+% 'Colors': {figure color, axis color, text color, accent color}
+% 'DaysBack': # of days back you want to see the historical data
+% 'Directory': directory to save data (will automatically set to directory
+%              this file is in. 
+% 'FigNum': Number that the figure will be.
+% 'FileName': File name data saved as. 
+% 'FontName': Font that you want plot in (defaults to helvetica). type
+%             listfonts into command window to see all of your system's
+%             fonts
+% 'SnapPoints': true/false, snaps the points to either the edge of grid 
+%               cells or the middle of the grid cells
+% 'OnceADay': if data has already been collected today it will not run
+%
 % recommended to put this in a startup.m file so it will run each time you
 % open maltab.*
 % 
@@ -57,57 +71,97 @@ function hellcheckin(collect_point,onceaday)
 % now this figure will come up once a day and collect a data point
 
 %% parse inputs
+args=varargin;
+
+%set if not input
+in_directory=false;
+in_axtitles=false;
+in_daysback=false;
+in_fontname=false;
+in_colormap=false;
+in_fignum=false;
+in_filename=false;
+in_colors=false;
+
+%Defaults
+snap_2nice_nums=true;
+onceaday=false;
+
+%want it to run and plot historical data 
 if ~exist("collect_point")
     collect_point=false;
 end
 
-if ~exist("onceaday")
-    onceaday=false;
-    collect_point=true;
+%parse varargin
+for i=1:2:numel(args)
+    switch args{i}
+
+        case 'AxTitles'
+            tit_nsew=args{i+1};
+            tit_north=tit_nsew{1};
+            tit_south=tit_nsew{2};
+            tit_east=tit_nsew{3};
+            tit_west=tit_nsew{4};
+            in_axtitles=true;
+
+        case 'Colormap'
+            cmp=args{i+1};
+            in_colormap=true;   
+
+        case 'Colors'
+            colors=args{i+1};
+            color_fig=colors{1};
+            color_ax=colors{2};
+            color_a1=colors{3}; %title, colorbar labels
+            color_a2=colors{4}; %boarder, x-y labels            
+            
+        case 'DaysBack'
+            days_back=args{i+1};
+            in_daysback=true;
+
+        case 'Directory'
+            directory=args{i+1};
+            in_directory=true;
+
+        case 'FigNum'
+            fig_num=args{i+1};
+            in_fignum=true;  
+
+         case 'FileName'
+            file_name=args{i+1};
+            in_filename=true;           
+            
+        case 'FontName'
+            font_name=args{i+1};
+            in_fontname=true;
+
+        case 'SnapPoints'
+            snap_2nice_nums=args{i+1};
+
+        case 'OnceADay'
+            onceaday=args{i+1};
+    end
 end
 
-%% FORMATTING
-
-% -=- LABELS -=-
-%x and y labels (west & south are - , north & east are +)
-%ideally you make the negative emotion - and positive one +
-tit_west='Stressed';
-tit_east='At Ease';
-tit_south='Inadequate';
-tit_north='Capable';
-
-% -=- FILE NAME AND PATH -=-
-%file name: if unchanged it will create a text file with your input words
-your_name='TEST';
-file_name=[your_name '_' tit_north '_' tit_south '_' tit_east '_' tit_west];
-
-%file path: MUST CHANGE
-directory='/Users/helenaschreder/Documents/MATLAB/hellmatfiles'; 
-
-% -=- OTHER -=-
-%round so that all your points are -1:0.05:1
-snap_2nice_nums=true;
-
-%number of days before today you'd like plotted
-days_back=30;
-
-% -=- FORMATTING -=-
-%figure number
-fig_num=80085;
-
-%colors
-color_fig='#FFCBC5';
-color_ax='#FFF5F2';
-color_a1='#5B516A'; %title, colorbar labels
-color_a2='#1A5C71'; %boarder, x-y labels
-
-%font (listfonts to see available)
-font_name='Graphik'; 
-
-%color map (for historical points)
-% I have one pasted at the bottom from https://www.fabiocrameri.ch/colourmaps/,
-% Use that, load in a different one, or use a built in maltab
-cmp=pretty_color_map;
+% -=- DEFAULTS -=-
+if ~in_axtitles
+    tit_west='Stressed';
+    tit_east='At Ease';
+    tit_south='Inadequate';
+    tit_north='Capable';
+end
+if ~in_colormap;cmp=pretty_color_map;end
+if ~in_colors
+    color_fig='#FFCBC5';
+    color_ax='#FFF5F2';
+    color_a1='#5B516A'; %title, colorbar labels
+    color_a2='#1A5C71'; %boarder, x-y labels
+end
+if ~in_daysback;days_back=7;end
+if ~in_directory;directory=fileparts(which('hellcheckin.m'));end
+if ~in_fignum;fig_num=80085;end
+if ~in_filename;file_name=[tit_north '_' tit_south '_' tit_east '_' tit_west];end
+if ~in_fontname;font_name='Helvetica';end
 
 %% checking if file exists
 
@@ -131,7 +185,7 @@ else %does not exist
 end
 
 if ~istoday %only runs if data wasn't collected already
-    %should make it so you can just look at the figure with old points
+%should make it so you can just look at the figure with old points
 
 %% crete figure
 fig=figure(fig_num);clf
@@ -271,7 +325,6 @@ for i=1:numel(indx2plt)-1
     % plot3(xpt,ypt,zpt,'o','Color',color_a2,'markersize',ms/3,'LineWidth',2)
 end
 
-
 %% colorbar
 c.Visible='on';
 colormap(cvec)
@@ -279,7 +332,6 @@ c.TickDirection='none';
 c.Color=color_a1;
 c.Box='off';
 c.LineWidth=.01;
-
 
 ccc=linspace(0,1,days_back+2);
 ccc=ccc(1:end-1)+(ccc(2)-ccc(1))/2;
@@ -350,7 +402,7 @@ end
 
 %% Load Colormap
 function cmp=pretty_color_map
-%batlow colormap from fabio
+%batlow colormap from fabio (https://www.fabiocrameri.ch/colourmaps/)
 cmp=[0.00519315336708475	0.0982381170217676	0.349841880983090
 0.00906521459033197	0.104486650830000	0.350933085197316
 0.0129633498423289	0.110779224878689	0.351992436749182
