@@ -1,12 +1,14 @@
 
 %{
-Things to change
-1. Plot old points
-    a. input for how many days back you want it to go.
-    b. and make sure colors correspond to dates not indexes
-2. run with no inputs -> plots old points
-3. run with input 'collect' or 1 or something -> collect points
-4. run with input 'onceaday' -> will only collect points once a day
+Things to change:
+1. When to run/collect data/plot old points
+    a. run with no inputs -> plots old points
+    b. run with input 'collect' or 1 or something -> collect points
+    c. run with input 'onceaday' -> will only collect points once a day
+
+2. remove the input changes within the function, create your own function
+to be run
+
 %}
 
 function hellcheckin(collect_point,onceaday)
