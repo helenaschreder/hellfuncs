@@ -1,8 +1,6 @@
  
 
-% function run_hellcheckin
-
-
+function run_hellcheckin
 
 % -=- LABELS -=-
 %x and y labels (west & south are - , north & east are +)
@@ -15,7 +13,7 @@ tit_nsew={tit_north,tit_south,tit_east,tit_west};
 
 % -=- FILE NAME AND PATH -=-
 %file name: if unchanged it will create a text file with your input words
-your_name='TEST';
+your_name='Schreder';
 file_name=[your_name '_' tit_north '_' tit_south '_' tit_east '_' tit_west];
 
 %file path: MUST CHANGE
@@ -43,6 +41,7 @@ colors={color_fig,color_ax,color_a1,color_a2};
 font_name='Graphik'; 
 
 hellcheckin(1,'AxTitles',tit_nsew,'Colors',colors,'DaysBack',14, ...
-    'FigNum',80085,'FileName',file_name,'OnceADay',1,'FontName',font_name)
+    'FigNum',80085,'FileName',file_name,'OnceADay',1,'FontName',font_name, ...
+    'OnceADay',1)
 
-% end
+end
