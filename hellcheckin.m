@@ -88,7 +88,7 @@ snap_2nice_nums=true;
 onceaday=false;
 
 %want it to run and plot historical data 
-if ~exist("collect_point")
+if ~exist("collect_point") || collect_point==0
     collect_point=false;
 end
 
@@ -140,6 +140,7 @@ for i=1:2:numel(args)
 
         case 'OnceADay'
             onceaday=args{i+1};
+            collect_point=false;
     end
 end
 
@@ -177,14 +178,16 @@ if isfile(file) %exists
     if onceaday
         %load data
         [~,~,datev]=loadmydata(file);
-        istoday=sum(datev==datetime('today')+1);
+        % istoday=sum(datev==datetime('today')+1);
+        collect_point=sum(datev==datetime('today')+1);
     end
 
 else %does not exist
     newfile=true;
+    collect_point=true;
 end
 
-if ~istoday %only runs if data wasn't collected already
+% if ~istoday %only runs if data wasn't collected already
 %should make it so you can just look at the figure with old points
 
 %% crete figure
@@ -314,7 +317,7 @@ indx2plt=find(datev>=todays_date-days_back);
 daysago=days(todays_date-datev)+1;
 
 %plot old points
-for i=1:numel(indx2plt)-1
+for i=1:numel(indx2plt)
 
     ypt=nsv(indx2plt(i));
     xpt=ewv(indx2plt(i));
@@ -347,7 +350,7 @@ c.YDir='reverse';
 c.Ticks=ccc(1:cbar_step:end);
 c.TickLabels=string(datetime(todays_date-(0:cbar_step:days_back)','Format','MMM-dd'));
 
-end %if ~istoday
+% end %if ~istoday
 
 
 
