@@ -1,17 +1,12 @@
 
-%{
-Things to change:
-1. When to run/collect data/plot old points
-    a. run with no inputs -> plots old points
-    b. run with input 'collect' or 1 or something -> collect points
-    c. run with input 'onceaday' -> will only collect points once a day
-
-2. remove the input changes within the function, create your own function
-to be run
-%}
-
 function hellcheckin(collect_point,varargin)
 
+% Example use case:
+% hellcheckin(1,'AxTitles',tit_nsew,'Colors',colors,'DaysBack',14, ...
+%     'FigNum',80085,'FileName',file_name,'OnceADay',1,'FontName',font_name, ...
+%     'OnceADay',1)
+% (see function run_hellcheckin.m for full example)
+%
 %INPUTS:
 % none: just shows you historical data
 %   use case: hellcheckin
@@ -38,23 +33,10 @@ function hellcheckin(collect_point,varargin)
 % open maltab.*
 % 
 % OUTPUTS (kind of):
-% No actual outputs but will save your point to a txt file. Specify naming
-% conventions and path in formatting section (IMPORTANT).
+% No actual outputs but will save your point to a txt file.
 % If the file doesn't already exist a new one will be made. 
 % Data is from -1 to +1, if entered correctly the negative emotion should
 % correspond to a negative number and + to a positive emotion
-% 
-% FORMATTING:
-% in the section below parse inputs you may change formatting for the
-% figure to your liking. 
-% You MUST change the file and directory details (second chunk)
-% Most things are self explanatory. Here are the ones that aren't
-%   snap_2nice_nums: will put points at intervals of 0.05 so it is on grid
-%   or in between grid points. Turn this off so that your point goes
-%   exactly where you click
-%   days_back: the number of previous days you'd like to plot. So if it is
-%   set to 7 it will plot points made within the last week, no matter how
-%   many days you input data. 
 % 
 % RUNNING:
 % When it is collecting a point  you can click around until you like its
@@ -176,10 +158,12 @@ if isfile(file) %exists
     
     %if user specifies it's only run once a day
     if onceaday
+        
         %load data
         [~,~,datev]=loadmydata(file);
         % istoday=sum(datev==datetime('today')+1);
-        collect_point=sum(datev==datetime('today')+1);
+        collect_point=~sum(datev==datetime('today'));
+        
     end
 
 else %does not exist
