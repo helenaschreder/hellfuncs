@@ -380,9 +380,6 @@ function [nsv,ewv,datev]=loadmydata(file)
     ewv=table2array(saved_data(:,2));
     datev=table2array(saved_data(:,3));
 
-    %TEMPORARY: for testing
-    datev=datev-flip(0:numel(datev)-1)';
-
 end
 
 
