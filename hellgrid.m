@@ -18,7 +18,8 @@ function [xcell,ycell,numg,datacell,stats]=hellgrid(xcoords,ycoords,xvec,yvec,va
 % 
 % 'Stats': calculates statistics for each cell of data. input as cell
 % with strings;
-%       -'BootStrap',N: mean from bootstrap and 95% confidence interval
+%       -'BootStrap',nboot: mean from bootstrap and 95% confidence interval
+%           (see bootstrp documentation for more info on nboot)
 %       -'Mean': regular mean
 %       -'RMS': root mean squared
 %       -'STD': standard deviaton
@@ -33,6 +34,24 @@ function [xcell,ycell,numg,datacell,stats]=hellgrid(xcoords,ycoords,xvec,yvec,va
 % 
 % NOTE: stats will not be calculated if there are less than 2 points in a
 % cell
+% 
+% EXAMPLE USE CASE:
+% scatter data on the x and y axis (call xdat, ydat) and you want to
+% botstrap it over the x axis into 10 bins:
+% 
+% xvec=linspace(min(xdat(:)), max(xdat(:)), 10);
+% yvec=[min(ydat(:)),max(ydat(:))]; %only want one bin
+% [~,~,~,~,stats]=hellgrid2(xdat,ycoords,xvec,yvec,'Stats',{'Bootstrap',100})
+% %means: 
+% xp=stats(1).BootMean;
+% yp=stats(2).BootMean;
+% %upper and lower confidence intervals:
+% xC1=stats(1).BootConfidence1;xC2=stats(1).BootConfidence2;
+% yC1=stats(2).BootConfidence1;yC2=stats(2).BootConfidence2;
+% %plot points and error bars (in both directions)
+%     plot(xp,yp,'.-');
+%     errorbar(xp,yp,yp-yC1,yC2-yp,xp-xC1,xC2-xp);
+% 
 
 %--------------------------------------------------
 zdatain=false;
@@ -67,7 +86,7 @@ switch args{i}
         for ic=1:numel(statnames)
         switch statnames{ic}
             case 'BootStrap';calc_BS=true;
-                N=statnames{ic+1};
+                nboot=statnames{ic+1};
             case 'Mean';calc_mean=true;
             case 'RMS';calc_rms=true;
             case 'STD';calc_std=true;
@@ -147,10 +166,10 @@ for zs=1:2+znum %loops through each data set
 
             %bootstrapping
             if calc_BS
-                boots=bootstrp(N,@mean,dataround);
+                boots=bootstrp(nboot,@mean,dataround);
                 stats(zs).BootMean(i,j) = mean(boots(:));
-                stats(zs).BootConfidence1(i,j) = boots(floor(0.05*N));
-                stats(zs).BootConfidence2(i,j) = boots(ceil(0.95*N));
+                stats(zs).BootConfidence1(i,j) = boots(floor(0.05*nboot));
+                stats(zs).BootConfidence2(i,j) = boots(ceil(0.95*nboot));
             end
 
             %regular mean
