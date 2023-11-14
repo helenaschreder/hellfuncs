@@ -1,6 +1,6 @@
-% function hellclose
+function hellclose
 % function to close all of the files not in the current folder
-% note: doesn't remove things that are in subfolders of current directory
+% note: does not close newly created files (e.g. untitledX.m)
 
 % all open files
 A = matlab.desktop.editor.getAll;

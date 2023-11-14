@@ -3,13 +3,11 @@ function helldir(topic)
 % 
 % HELLFILES
 %   0 or 'hellfiles'
-% 
 % RESEARCH
 %   1, 'research', or 'rees'
 % OCEANOGRAPHY
 %   2 or 'ocean'
 %   21 or 'lastocean' to open last edited folder
-% 
 % AMATH
 %   3 or 'amath'
 %   31 or 'lastamath' to open last edited folder
