@@ -12,16 +12,13 @@ function hellgif(filename,i,varargin)
 % 'Time': total amount of time you want the animation
     % defaults to using all frames
 % 'Max': max amount of frames, REQUIRED with 'FrameNum' or 'Time'
+% 
+% EXAMPLE CALLING:
+% for i=1:N
+%     plot(...)
+%     hellgif('mygif',i,varargin)
+% end
 
-%{ 
-EXAMPLE CALLING:
-
-for i=1:N
-    plot(...)
-    hellgif('mygif',i,varargin)
-end
-
-%}
 
 %--INITIALIZE------------
 framesin = false;
