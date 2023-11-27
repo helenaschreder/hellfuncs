@@ -33,6 +33,10 @@ function [fig,cmp,colorvecs]=hellfig(num,varargin)
 %       Useage: 'BigColorBar',{'location','east','title','your title','limits',[0,10]}
 % 'ColorsVec': input a # after this and it will give you an Nx3 matrix
 % where each row is a different color from the colormap
+% 
+% OTHER:
+% handy line for saving vector files:
+% saveas(gcf,[cd '/Figures/' name],'epsc')
 
 %----------CREATE FIGURE----------
 fig=figure(num);clf
