@@ -29,9 +29,15 @@ for i = (find(toclose==1))'
     n=n+1;
 end
 
+if sum(toclose)==0
+    fprintf('Nothing to close.\n')
+else
+
 % tell the user which files were closed
 % fprintf('closed: %0s\n',A(toclose).Filename) %with directory
 fprintf('closed: %0s\n',filenames{:}) %without directory 
 
 %close files
 close(A(toclose))
+
+end
