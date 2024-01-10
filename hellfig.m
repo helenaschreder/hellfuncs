@@ -6,6 +6,7 @@ function [fig,cmp,colorvecs]=hellfig(num,varargin)
 % cmp: colormap matrix
 %
 % INPUTS:
+% num: # figure. input 0 to make no figure (good for getting colormap)
 % 'FigPos': [xpos,ypos,width,height]. To leave as default use NaN
 % 'FigDim': [width,height]. To leave as default use 0 or NaN
 % 'SubSize': three digit number with amount of subplots
@@ -37,14 +38,10 @@ function [fig,cmp,colorvecs]=hellfig(num,varargin)
 % OTHER:
 % handy line for saving vector files:
 % saveas(gcf,[cd '/Figures/' name],'epsc')
+%
+% CHANGES:
+% should make big colorbar into a different function
 
-%----------CREATE FIGURE----------
-fig=figure(num);clf
-fig.Color='w';
-fig.Units="inches";
-
-%----------PARSE INPUTS----------
-args=varargin;
 
 %defaults
 FontSize=12; 
@@ -61,20 +58,38 @@ sgtitlein=false;
 gridin=false;
 bigcolorbar=false;
 colorvecrequested=false;
+centeraxis=false;
 
+%----------CREATE FIGURE----------
+if num~=0
+    fig=figure(num);clf
+    fig.Color='w';
+    fig.Units="inches";
+    makefig = true;
+else
+    makefig=false;
+    fig = [];
+end
+
+%----------PARSE INPUTS----------
+args=varargin;
 for i=1:2:numel(args)
     switch args{i}
         case 'FigPos'
+            if makefig
             figPos=args{i+1};
             temppos = figPos;
             temppos(isnan(figPos))=0;
             fig.Position=fig.Position.*(isnan(figPos))+temppos;
+            end
 
         case 'FigDim'
+            if makefig
             FigDim=args{i+1};
             FidgimNS=isnan(FigDim) + (FigDim==0);
             if ~FidgimNS(1);fig.Position(3)=FigDim(1);end
             if ~FidgimNS(2);fig.Position(4)=FigDim(2);end
+            end
 
         case 'SubSize'
             SubSize=args{i+1};
@@ -144,12 +159,16 @@ for i=1:2:numel(args)
             colorvecrequested=true;
             colorvecparts=args{i+1};
 
+        case 'CenterAx'
+            centeraxis=true;
+
     end
 end
 %------------------------------
 
 
 %----------CREATE AXES----------
+if makefig
 for i=1:SubNum
     if SubNum>1;subplot(SubRows,SubCols,i);end
     hold on
@@ -165,8 +184,10 @@ for i=1:SubNum
     if gridin;grid(gridtype); end
     if xlimsin;xlim(xlims);end
     if ylimsin;ylim(ylims);end
+    if centeraxis;ax.XAxisLocation='origin';ax.YAxisLocation='origin';end
 end
 if sgtitlein;sgtitle(SGtitle);end
+end
 %------------------------------
 
 %-COLOR VEC--------------------
@@ -178,7 +199,7 @@ end
 %------------------------------
 
 %--------BIG COLOR BAR---------
-if bigcolorbar
+if bigcolorbar && makefig
 
 bcbtitlein=false;
 bcblimsin=false;
