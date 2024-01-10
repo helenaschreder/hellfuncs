@@ -22,10 +22,10 @@ if topic == 0
     topic = 'hellfiles';
 
 elseif topic == 1
-    topic = 'research';
+    topic = 'Research';
 
 elseif topic == 2
-    topic = 'iceexp';
+    topic = 'IceExperiments';
 
 elseif topic == 3
     topic = 'chaos';
@@ -34,7 +34,7 @@ elseif topic == 31
     topic = 'lastchaos';
 
 elseif topic==9
-    topic = 'parts';
+    topic = 'ParticleCode';
 
 end
 %--------------------------------------------------------------------------
