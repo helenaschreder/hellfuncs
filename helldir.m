@@ -1,79 +1,96 @@
 function helldir(topic)
 % opens my commonly used folders.
 % 
-% HELLFILES
-%   0 or 'hellfiles'
-% RESEARCH
-%   1, 'research', or 'rees'
-% OCEANOGRAPHY
-%   2 or 'ocean'
-%   21 or 'lastocean' to open last edited folder
-% AMATH
-%   3 or 'amath'
-%   31 or 'lastamath' to open last edited folder
+% SPEED DIAL:
+    % 0: custom files
+    % 1: research
+    % 2: ice experiments
+    % 3: chaos
+    % 31: last chaos file
+    % 9: Michelle particle tracking code
+% ALL ENTRIES
+    % 'hellfiles': my custom files
+    % 'Research': TG_ellipse
+    % 'IceExperiments': ice experiment
+    % 'ParticleCode': Michelle Particle tracking code
+    % 'chaos' or 'lastchaos': AMATH502
+    % 'amath581' or 'lastamath581': AMATH 581
+    % 'ocean' or 'lastocean': OCEAN 510
 
-%some alternate inputs for research
-if topic ==1
-    topic = 'research';
-elseif strcmp(topic,'rees')
-    topic = 'research';
-
-%alternate inputs for ocean
-elseif topic == 2
-    topic = 'ocean';
-elseif topic == 21
-    topic = 'lastocean';
-
-%alternate inputs for ocean
-elseif topic == 3
-    topic = 'amath';
-elseif topic == 31
-    topic = 'lastamath';
-
-% hellfiles 
-elseif topic ==0
+%-SPEED DIAL---------------------------------------------------------------
+if topic == 0
     topic = 'hellfiles';
+
+elseif topic == 1
+    topic = 'research';
+
+elseif topic == 2
+    topic = 'iceexp';
+
+elseif topic == 3
+    topic = 'chaos';
+
+elseif topic == 31
+    topic = 'lastchaos';
+
+elseif topic==9
+    topic = 'parts';
+
 end
+%--------------------------------------------------------------------------
 
-%main inputs
+%-TEXT INPUTS--------------------------------------------------------------
 switch topic
-
     %my custom files
     case 'hellfiles'
         directory = '/Users/helenaschreder/Documents/MATLAB/hellfuncs';
 
     %research
-    case 'research'
+    case 'Research'
         directory = '/Users/helenaschreder/Desktop/UW/Ice/TG-Ellipse';
 
-    %general ocean
+    % ice particle tracking experiments with K&I
+    case 'IceExperiments'
+        directory = '/Users/helenaschreder/Desktop/UW/Ice/ice_experiments';
+
+    %michelle particle tracking code
+    case 'ParticleCode'
+        directory = '/Users/helenaschreder/Documents/MATLAB/ParticleTracking';
+
+    % chaos (AMATH 502)
+    case 'chaos'
+        directory  = '/Users/helenaschreder/Desktop/UW/Chaos';
+    case 'lastchaos'
+        directory  = '/Users/helenaschreder/Desktop/UW/Chaos';
+        subdirectory = '*_AMATH502';
+
+    % AMATH 581
+    case 'amath581'
+        directory  = '/Users/helenaschreder/Desktop/UW/AMATH 581';
+    case 'lastamath281'
+        directory  = '/Users/helenaschreder/Desktop/UW/AMATH 581';
+        subdirectory = '*_AMATH581';
+
+    % OCEAN 510
     case 'ocean'
         directory = '/Users/helenaschreder/Desktop/UW/OCEAN 510';
-
-    %general amath
-    case 'amath'
-        directory  = '/Users/helenaschreder/Desktop/UW/AMATH 581';
-
-    %last edited ocean
     case 'lastocean'
         directory  = '/Users/helenaschreder/Desktop/UW/OCEAN 510';
         subdirectory = '*_OCEAN510';
 
-    %last edited amath
-    case 'lastamath'
-        directory  = '/Users/helenaschreder/Desktop/UW/AMATH 581';
-        subdirectory = '*_AMATH581';
-
     otherwise
         error('bad input')
 end
+%--------------------------------------------------------------------------
 
+%SET DIRECTORY-------------------------------------------------------------
 cd(directory)
 
-% set directory
+% if subdirectory is requested
 if exist("subdirectory","var")
     % keyboard
     A = dir(subdirectory); %folder in that directory
     [~,last] = max(datetime({A.date})); %last edited folder
     cd(fullfile(directory, A(last).name)) %open that
 end
+%--------------------------------------------------------------------------
