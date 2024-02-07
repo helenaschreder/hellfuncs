@@ -1,5 +1,5 @@
 
-function [fig,cmp,colorvecs]=hellfig(num,varargin)
+function [fig,cmp,cvec,cbar]=hellfig(num,varargin)
 %HELLFIG
 % OUTPUTS:
 % fig: fig handle
@@ -37,10 +37,6 @@ function [fig,cmp,colorvecs]=hellfig(num,varargin)
 % OTHER:
 % handy line for saving vector files:
 % saveas(gcf,[cd '/Figures/' name],'epsc')
-%
-% CHANGES:
-% should make big colorbar into a different function
-
 
 %defaults
 FontSize=12; 
@@ -58,6 +54,13 @@ gridin=false;
 bigcolorbar=false;
 colorvecrequested=false;
 centeraxis=false;
+
+%default outputs 
+fig=[];
+cmp=[];
+cvec=[];
+cbar=[];
+
 
 %----------CREATE FIGURE----------
 if num~=0
@@ -192,68 +195,14 @@ end
 if colorvecrequested
     cin=round(linspace(1,256,colorvecparts));
     cmp=colormap;
-    colorvecs=cmp(cin,:);
+    cvec=cmp(cin,:);
 end
 %------------------------------
 
 %--------BIG COLOR BAR---------
 if bigcolorbar && makefig
-
-bcbtitlein=false;
-bcblimsin=false;
-
-if SubNum==1;error('To create a big color bar, please input specify a subplot amount greater than 1.');end
-
-    %parse inputs
-    for ibcb=1:2:numel(bcbspecs)
-        switch bcbspecs{ibcb}
-            case 'location'
-                switch bcbspecs{ibcb+1}
-                    case 'north'
-                        if SubRows<2;error('For a north big color bar plase specify a subsize with 2 or more rows.');end
-                        bcbvec=1:SubCols;
-                    case 'south'
-                        if SubRows<2;error('For a south big color bar plase specify a subsize with 2 or more rows.');end
-                        bcbvec=SubNum-SubCols+1:SubNum;
-                    case 'east'
-                        if SubCols<2;error('For an east big color bar plase specify a subsize with 2 or more columns.');end
-                        bcbvec=SubCols:SubCols:SubNum;
-                    case 'west'
-                        if SubCols<2;error('For a west big color bar plase specify a subsize with 2 or more columns.');end
-                        bcbvec=1:SubCols:SubNum;
-                    otherwise 
-                        if SubCols<2;error('Automatically chose east for location but you dont have enough subplots. fix this.');end
-                        bcbvec=SubCols:SubCols:SubNum;
-                end
-
-            case 'title'
-                bcbtitlein=true;
-                bcbtitle = bcbspecs{ibcb+1};
-
-            case 'limits'
-                bcblimsin=true;
-                bcblims=bcbspecs{ibcb+1};
-        end
-
-    end
-
-    try 
-        subplot(SubRows,SubCols,bcbvec)
-    catch
-        error('check that you entered correct location information.')
-    end
-    ax=gca;
-    ax.Color='none';
-    grid('off')
-    ax.FontSize=12;
-    ax.XColor='none';
-    ax.YColor='none';
-    c=colorbar;
-    c.Position(3)=c.Position(3)*4;
-    if bcbtitlein;c.Label.String=bcbtitle;end
-    if bcblimsin;clim(bcblims);end
-
-end %if bigcolorbar
+    cbar = hellbigcbar(num,bcbspecs{:});
+end 
 %------------------------------
 
 %save figure
