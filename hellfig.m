@@ -7,22 +7,8 @@ function [fig,cmp,colorvecs]=hellfig(num,varargin)
 %
 % INPUTS:
 % num: # figure. input 0 to make no figure (good for getting colormap)
-% 'FigPos': [xpos,ypos,width,height]. To leave as default use NaN
-% 'FigDim': [width,height]. To leave as default use 0 or NaN
-% 'SubSize': three digit number with amount of subplots
-% 'FontSize': fontsize, default is 12pt
 % 'Aspect': any nonzero 1D input = 1:1, or put in a 2D or 3D vector for
 %           another aspect ratio
-% 'Fabio': sets colormap using fabio colormaps
-% 'InvisAx': removes box and numbers from axes, any input after
-% 'LogScale': turns on log scale, [xaxis,yaxis] set 1 and 0
-% 'Interpreter': e.g. 'latex', 'none'
-% 'Slims': xlim and ylim are the same, input a matrix with at least two
-%          numbers to set limits
-% 'Xlims': xlimits applied to each subplot
-% 'Ylims': ylimits applied to each subplot
-% 'SGtitle': Subplot group title
-% 'Grid': puts grid on each subplot. Can be 'on','off','minor'
 % 'BigColorBar': creates a big color bar out of subplots. Must specify a
 %                subsize that includes axes for the colorbar. e.g. if you
 %                want subplots size 320 and a colorbar on the right, input
@@ -33,7 +19,20 @@ function [fig,cmp,colorvecs]=hellfig(num,varargin)
 %       'limits': [lower limit, upper limit]
 %       Useage: 'BigColorBar',{'location','east','title','your title','limits',[0,10]}
 % 'ColorsVec': input a # after this and it will give you an Nx3 matrix
-% where each row is a different color from the colormap
+% where each row is a different color from the colormap% 'Fabio': sets colormap using fabio colormaps
+% 'FigDim': [width,height]. To leave as default use 0 or NaN
+% 'FigPos': [xpos,ypos,width,height]. To leave as default use NaN
+% 'FontSize': fontsize, default is 12pt
+% 'Grid': puts grid on each subplot. Can be 'on','off','minor'
+% 'Interpreter': e.g. 'latex', 'none'
+% 'InvisAx': removes box and numbers from axes, any input after
+% 'LogScale': turns on log scale, [xaxis,yaxis] set 1 and 0
+% 'SGtitle': Subplot group title
+% 'SubSize': three digit number with amount of subplots
+% 'Slims': xlim and ylim are the same, input a matrix with at least two
+%          numbers to set limits
+% 'Xlims': xlimits applied to each subplot
+% 'Ylims': ylimits applied to each subplot
 % 
 % OTHER:
 % handy line for saving vector files:
@@ -75,31 +74,6 @@ end
 args=varargin;
 for i=1:2:numel(args)
     switch args{i}
-        case 'FigPos'
-            if makefig
-            figPos=args{i+1};
-            temppos = figPos;
-            temppos(isnan(figPos))=0;
-            fig.Position=fig.Position.*(isnan(figPos))+temppos;
-            end
-
-        case 'FigDim'
-            if makefig
-            FigDim=args{i+1};
-            FidgimNS=isnan(FigDim) + (FigDim==0);
-            if ~FidgimNS(1);fig.Position(3)=FigDim(1);end
-            if ~FidgimNS(2);fig.Position(4)=FigDim(2);end
-            end
-
-        case 'SubSize'
-            SubSize=args{i+1};
-            SubRows=floor(SubSize/100);
-            SubCols=floor((SubSize-SubRows*100)/10);
-            SubNum=SubRows*SubCols;
-
-        case 'FontSize'
-            FontSize=args{i+1};
-
         case 'Aspect'
             Aspect=args{i+1};
             if args{i+1}==0;Aspectin=false;
@@ -111,57 +85,81 @@ for i=1:2:numel(args)
                 Aspectin=true;
             end
 
+        case 'BigColorBar'
+            bigcolorbar=true;
+            bcbspecs=args{i+1};
+
+        case 'CenterAx'
+            centeraxis=true;        
+        
+        case 'ColorsVec'
+            colorvecrequested=true;
+            colorvecparts=args{i+1};
+
         case 'Fabio'
             FabioName=args{i+1};
             load('fabiocmps.mat','fabiocmps') %must have this file in the same folder
             cmp = fabiocmps.(FabioName);
             colormap(cmp)
 
-        case 'LogScale'
-            LogScale=args{i+1};
-            LogScaleX=LogScale(1);
-            LogScaleY=LogScale(2);
+        case 'FigDim'
+            if makefig
+            FigDim=args{i+1};
+            FidgimNS=isnan(FigDim) + (FigDim==0);
+            if ~FidgimNS(1);fig.Position(3)=FigDim(1);end
+            if ~FidgimNS(2);fig.Position(4)=FigDim(2);end
+            end
 
-        case 'InvisAx'
-            InvisAx=true;
+        case 'FigPos'
+            if makefig
+            figPos=args{i+1};
+            temppos = figPos;
+            temppos(isnan(figPos))=0;
+            fig.Position=fig.Position.*(isnan(figPos))+temppos;
+            end
+
+        case 'FontSize'
+            FontSize=args{i+1};
+
+        case 'Grid'
+            gridin=true;
+            gridtype=args{i+1};
 
         case 'Interpreter'
             InterpName=args{i+1};
             set(0,'defaulttextinterpreter',InterpName)
             InterpSpec=true;
 
-        case 'Slims' %square X and Y lims
-            slims=args{i+1};
-            slims=[min(slims(:)),max(slims(:))];
-            SLimsSpec=true;
+        case 'InvisAx'
+            InvisAx=true;
 
-        case 'Ylims'
-            ylimsin=true;
-            ylims=args{i+1};
-
-        case 'Xlims'
-            xlimsin=true;
-            xlims=args{i+1};
+        case 'LogScale'
+            LogScale=args{i+1};
+            LogScaleX=LogScale(1);
+            LogScaleY=LogScale(2);
 
         case 'SGtitle'
             sgtitlein=true;
             SGtitle=args{i+1};
 
-        case 'Grid'
-            gridin=true;
-            gridtype=args{i+1};
+        case 'Slims' %square X and Y lims
+            slims=args{i+1};
+            slims=[min(slims(:)),max(slims(:))];
+            SLimsSpec=true;
 
-        case 'BigColorBar'
-            bigcolorbar=true;
-            bcbspecs=args{i+1};
+        case 'SubSize'
+            SubSize=args{i+1};
+            SubRows=floor(SubSize/100);
+            SubCols=floor((SubSize-SubRows*100)/10);
+            SubNum=SubRows*SubCols;
 
-        case 'ColorsVec'
-            colorvecrequested=true;
-            colorvecparts=args{i+1};
+        case 'Xlims'
+            xlimsin=true;
+            xlims=args{i+1};
 
-        case 'CenterAx'
-            centeraxis=true;
-
+        case 'Ylims'
+            ylimsin=true;
+            ylims=args{i+1};
     end
 end
 %------------------------------
