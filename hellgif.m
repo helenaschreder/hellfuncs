@@ -2,7 +2,8 @@
 
 function hellgif(filename,i,varargin)
 % filename: file name, do NOT include '.gif'
-% i: for loop index, needed to tell what first frame is
+% i: for loop index, needed to tell what first frame is (alternatively
+% could be 1 for the first frame and 0 for all others)
 % i think if you dont enter anything for varargin it'll default to all
 % framse and a pause time of 0.1
 % optional:
@@ -17,6 +18,14 @@ function hellgif(filename,i,varargin)
 % for i=1:N
 %     plot(...)
 %     hellgif('mygif',i,varargin)
+% end
+% 
+% EXAMPLE 2 CALLING:
+% first_frame = 1;
+% for i=1:N
+%     plot(...)
+%     hellgif('mygif',first_frame,varargin)
+%     first_frame = 0;
 % end
 
 
