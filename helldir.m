@@ -33,6 +33,12 @@ elseif topic == 3
 elseif topic == 31
     topic = 'lastchaos';
 
+elseif topic == 4
+    topic = 'amath582';
+
+elseif topic == 41
+    topic = 'lastamath582';
+
 elseif topic==9
     topic = 'ParticleCode';
 
@@ -63,6 +69,13 @@ switch topic
     case 'lastchaos'
         directory  = '/Users/helenaschreder/Desktop/UW/Chaos';
         subdirectory = '*_AMATH502';
+
+    % AMATH 581
+    case 'amath582'
+        directory  = '/Users/helenaschreder/Desktop/UW/AMATH582';
+    case 'lastamath582'
+        directory  = '/Users/helenaschreder/Desktop/UW/AMATH582';
+        subdirectory = '*_AMATH582';
 
     % AMATH 581
     case 'amath581'
