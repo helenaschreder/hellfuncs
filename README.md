@@ -6,4 +6,8 @@
 
 **hellgrid**: input a set of data and it will grid it into requested bins based on x and y location. Will return statistics such as mean, std, and bootstrap mean.
 
-**hellcheckin**: _in progress_. asks user to report how stressed and confident they feel. Saves data and plots trends.
+**hellclose**: closes all of the files not in your current directory
+
+**helldir**: changes directory to the folders I (helena) use a lot. This wont be helpful for you unless you copy and paste it to your own function
+
+**helltexfile**: makes a tex file that works for my homework specifically
