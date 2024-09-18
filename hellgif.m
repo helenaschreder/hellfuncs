@@ -2,10 +2,7 @@
 
 function hellgif(filename,i,varargin)
 % filename: file name, do NOT include '.gif'
-% i: for loop index, needed to tell what first frame is (alternatively
-% could be 1 for the first frame and 0 for all others)
-% i think if you dont enter anything for varargin it'll default to all
-% framse and a pause time of 0.1
+% i: for loop index, needed to tell what first frame is
 % optional:
 % 'FrameNum': number of frames desired
     % time between frames defaults to 0.1;
@@ -13,20 +10,23 @@ function hellgif(filename,i,varargin)
 % 'Time': total amount of time you want the animation
     % defaults to using all frames
 % 'Max': max amount of frames, REQUIRED with 'FrameNum' or 'Time'
+% i think if you dont enter anything for varargin it'll default to all
+% framse and a pause time of 0.1
 % 
-% EXAMPLE CALLING:
-% for i=1:N
+% EXAMPLE CALLING 1:
+% for i=1:100
 %     plot(...)
-%     hellgif('mygif',i,varargin)
+%     hellgif('mygif',i,'Pause',.1)
 % end
+% will make a gif called 'mygif' with 100 frames and .1 seconds between frames
 % 
-% EXAMPLE 2 CALLING:
-% first_frame = 1;
-% for i=1:N
+% EXAMPLE CALLING 2:
+% for i=1:100
 %     plot(...)
-%     hellgif('mygif',first_frame,varargin)
-%     first_frame = 0;
+%     hellgif('mygif',i,'FrameNum',50,'Max',100)
 % end
+% will make a gif called 'mygif' with 50 frames and .1 seconds between frames (default)
+
 
 
 %--INITIALIZE------------
