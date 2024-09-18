@@ -1,4 +1,4 @@
-function c = hellbigcbar(fignum,varargin)
+function c = hellbigcbar(fignum,subsize,varargin)
 
 % 'BigColorBar': creates a big color bar out of subplots. Must specify a
 %                subsize that includes axes for the colorbar. e.g. if you
@@ -16,16 +16,29 @@ function c = hellbigcbar(fignum,varargin)
 bcbtitlein=false;
 bcblimsin=false;
 
-% find the number of columns and rows on existing figure
-h=figure(fignum);
-N=numel(h.Children);
-for n = 1:N
-    pos1(n) = h.Children(n).Position(1);
-    pos2(n) = h.Children(n).Position(2);
+if isempty('subsize')
+    % find the number of columns and rows on existing figure
+    h=figure(fignum);
+    N=numel(h.Children);
+    for i=1:N
+        findsubs(i)=isa(h.Children(i), 'matlab.graphics.axis.Axes');
+    end
+    
+    n=1;
+    for i = find(findsubs==1)
+        pos1(n) = h.Children(i).Position(1);
+        pos2(n) = h.Children(i).Position(2);
+        n=n+1;
+    end
+    Ncols = numel(unique(pos1));
+    Nrows= numel(unique(pos2));
+else 
+    Nrows = subsize(1);
+    Ncols = subsize(2);
 end
-Ncols = numel(unique(pos1));
-Nrows= numel(unique(pos2));
 Nsub = Ncols*Nrows;
+
+
 
 %cannot run if only one subplot
 if Nsub == 1
@@ -73,8 +86,11 @@ for ibcb=1:2:numel(args)
 end
 
 try 
+    
     subplot(Nrows,Ncols,bcbvec)
+    
 catch
+    keyboard
     error('check that you entered correct location information.')
 end
 ax=gca;

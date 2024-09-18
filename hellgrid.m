@@ -1,7 +1,7 @@
 
 function [xcell,ycell,numg,datacell,stats]=hellgrid(xcoords,ycoords,xvec,yvec,varargin)
 % Schreder, 8/29/23
-%[xcell,ycell,numg,datacell,stats]=hellgrid2(xcoords,ycoords,xvec,yvec,varargin)
+% [xcell,ycell,numg,datacell,stats]=hellgrid(xcoords,ycoords,xvec,yvec,varargin)
 %
 % MANDATORY INPUTS:
 % xcoords & ycoords: coordinates you want to descretize based on
@@ -14,7 +14,7 @@ function [xcell,ycell,numg,datacell,stats]=hellgrid(xcoords,ycoords,xvec,yvec,va
 % 
 % 'EmptyEdge': output grid will normally be
 % size(length(xvec)-1,length(yvec)-1), this will make the size one more in
-% each direction (helpful for funcitons like imagesc).
+% each direction (helpful for funcitons like pcolor).
 % 
 % 'Stats': calculates statistics for each cell of data. input as cell
 % with strings;
@@ -41,7 +41,7 @@ function [xcell,ycell,numg,datacell,stats]=hellgrid(xcoords,ycoords,xvec,yvec,va
 % 
 % xvec=linspace(min(xdat(:)), max(xdat(:)), 10);
 % yvec=[min(ydat(:)),max(ydat(:))]; %only want one bin
-% [~,~,~,~,stats]=hellgrid2(xdat,ycoords,xvec,yvec,'Stats',{'Bootstrap',100})
+% [~,~,~,~,stats]=hellgrid(xdat,ycoords,xvec,yvec,'Stats',{'Bootstrap',100})
 % %means: 
 % xp=stats(1).BootMean;
 % yp=stats(2).BootMean;
@@ -124,17 +124,24 @@ for i=1:numel(yvec)-1 %each row
 
         %data in the cell
         incell = inrow+incol == 2;
-        xcell{i,j}={xcoords(incell)};
-        ycell{i,j}={ycoords(incell)};
+        xcell{i,j}=[xcoords(incell)];
+        ycell{i,j}=[ycoords(incell)];
 
         for iz=1:znum
         %separates input z data
             zztemp=zdata(:,:,iz);
-            datacell{i,j,iz} = {zztemp(incell)};
+            try
+            datacell{i,j,iz} = [zztemp(incell)];
+            catch
+                keyboard
+            end
         end
 
         %number of points in each cell
         numg(i,j) = sum(incell(:));
+        % if numg(i,j)~=0
+            % keyboard
+        % end
 
     end
 end
@@ -158,10 +165,10 @@ for zs=1:2+znum %loops through each data set
         for j=1:size(numg,2)
 
             %if there aren't two data points in a cell makes it NaN
-            if numel(cell2mat(data{i,j}))<2
+            if numel(data{i,j})<2
                 dataround=[NaN,NaN];
             else
-                dataround = cell2mat(data{i,j});
+                dataround = data{i,j};
             end
 
             %bootstrapping
@@ -174,18 +181,18 @@ for zs=1:2+znum %loops through each data set
 
             %regular mean
             if calc_mean
-                stats(zs).Mean(i,j)=mean(dataround,'all');
+                stats(zs).Mean(i,j)=mean(dataround,'all','omitnan');
                 %maybe do nanmean
             end
 
             %std
             if calc_std
-                stats(zs).STD(i,j)=std(dataround,0,'all');
+                stats(zs).STD(i,j)=std(dataround,0,'all','omitnan');
             end
 
             %root mean squared
             if calc_rms
-                 stats(zs).RMS(i,j)=sqrt(mean((dataround).^2));
+                 stats(zs).RMS(i,j)=sqrt(mean((dataround).^2,'omitnan'));
             end
 
         end

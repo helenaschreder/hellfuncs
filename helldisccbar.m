@@ -14,7 +14,7 @@ if ~exist("c")
 end
 
 %add color map
-colormap(cvec)
+set(gca,'Colormap',cvec)
 
 %sets ticks to be centered on the colors
 clim([0,1])
@@ -30,10 +30,10 @@ c.TickLabels = ticklabs;
 
 %color bar title (if requested)
 if exist("labtext")
+    c.Label.Interpreter = 'latex';
+    c.Label.FontSize = 14;
     c.Label.String = labtext;
 end
 
 %formatting
 c.TickLabelInterpreter = 'latex';
-c.Label.Interpreter = 'latex';
-c.Label.FontSize = 14;

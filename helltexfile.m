@@ -67,7 +67,7 @@ for i1 = 1:partnum
     % main part
     % header1 = ['%' repmat(num2str(i1),[1,cw-2]) '%'];
     header1 = ['%' repmat('♥ ',[1,round(cw-2)/2]) '%'];
-    header2 = ['%' repmat('-',[1,repnum]) ' Problem ' partnames{i1} ' ' repmat('-',[1,repnum]) '%'];
+    header2 = ['%' repmat('-',[1,repnum]) ' Problem ' partnames{i1} ' ' repmat('-',[1,repnum-1]) '%'];
     header3 = header1;
     % footer = header1;
     footer = ['%' repmat('-',[1,(cw-2)]) '%'];
@@ -87,7 +87,7 @@ for i1 = 1:partnum
         % header1 = ['%' repmat([num2str(i1) ALPHABET(i2)],[1,(cw-2)/2]) '%'];
         header3 = header1;
         % header1 = ['%' repmat(num2str(i1),[1,cw-2]) '%'];
-        header2 = ['%' repmat('-',[1,repnum]) ' Problem ' [partnames{i1} ' ' alphabet(i2)] ' ' repmat('-',[1,repnum]) '%'];
+        header2 = ['%' repmat('-',[1,repnum]) ' Problem ' [partnames{i1} ' ' alphabet(i2)] ' ' repmat('-',[1,repnum-1]) '%'];
         % header3 = ['%' repmat(ALPHABET(i2),[1,cw-2]) '%'];
         % footer = ['%' repmat([num2str(i1) ALPHABET(i2)],[1,(cw-2)/2]) '%'];
         footer = ['%' repmat('-',[1,(cw-2)]) '%'];

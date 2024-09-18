@@ -1,13 +1,10 @@
-function helldir(topic)
+function helldir(topic,option)
 % opens my commonly used folders.
 % 
 % SPEED DIAL:
     % 0: custom files
     % 1: research
     % 2: ice experiments
-    % 3: chaos
-    % 31: last chaos file
-    % 9: Michelle particle tracking code
 % ALL ENTRIES
     % 'hellfiles': my custom files
     % 'Research': TG_ellipse
@@ -16,31 +13,34 @@ function helldir(topic)
     % 'chaos' or 'lastchaos': AMATH502
     % 'amath581' or 'lastamath581': AMATH 581
     % 'ocean' or 'lastocean': OCEAN 510
+% OPTIONAL ENTRY:
+    % option = 'addpath': adds requested folder to current path. otherwise
+    % makes it the current directory.
+
+%-OPTION-------------------------------------------------------------------
+if ~exist('option')
+    option = 'cd';
+end
+%--------------------------------------------------------------------------
 
 %-SPEED DIAL---------------------------------------------------------------
 if topic == 0
     topic = 'hellfiles';
 
 elseif topic == 1
-    topic = 'Research';
+    topic = 'EllipseResearch';
+
+elseif topic == 11
+    topic = 'newResearch';
 
 elseif topic == 2
-    topic = 'IceExperiments';
+    topic = 'LineResearch';
 
 elseif topic == 3
-    topic = 'chaos';
-
-elseif topic == 31
-    topic = 'lastchaos';
+    topic = 'Drifters';
 
 elseif topic == 4
-    topic = 'amath582';
-
-elseif topic == 41
-    topic = 'lastamath582';
-
-elseif topic==9
-    topic = 'ParticleCode';
+    topic = 'IceExperiments';
 
 end
 %--------------------------------------------------------------------------
@@ -52,8 +52,18 @@ switch topic
         directory = '/Users/helenaschreder/Documents/MATLAB/hellfuncs';
 
     %research
-    case 'Research'
+    case 'EllipseResearch'
         directory = '/Users/helenaschreder/Desktop/UW/Ice/TG-Ellipse';
+
+    %new version of research
+    case 'newResearch'
+        directory = '/Users/helenaschreder/Desktop/UW/Ice/Ellipse-Sims';
+
+    case 'LineResearch'
+        directory = '/Users/helenaschreder/Desktop/UW/Ice/Line-TGV';
+
+    case 'Drifters'
+        directory = '/Users/helenaschreder/Desktop/UW/Lab Things/Drifters 2024';
 
     % ice particle tracking experiments with K&I
     case 'IceExperiments'
@@ -97,13 +107,21 @@ end
 %--------------------------------------------------------------------------
 
 %SET DIRECTORY-------------------------------------------------------------
-cd(directory)
+switch option
+    case 'addpath'
+        addpath(directory)
+        fprintf('%s added to path\n',directory)
 
-% if subdirectory is requested
-if exist("subdirectory","var")
-    % keyboard
-    A = dir(subdirectory); %folder in that directory
-    [~,last] = max(datetime({A.date})); %last edited folder
-    cd(fullfile(directory, A(last).name)) %open that
+    case 'cd'
+    cd(directory)
+    
+    % if subdirectory is requested
+    if exist("subdirectory","var")
+        % keyboard
+        A = dir(subdirectory); %folder in that directory
+        [~,last] = max(datetime({A.date})); %last edited folder
+        cd(fullfile(directory, A(last).name)) %open that
+    end
 end
+    
 %--------------------------------------------------------------------------

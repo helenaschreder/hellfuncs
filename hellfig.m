@@ -54,6 +54,7 @@ gridin=false;
 bigcolorbar=false;
 colorvecrequested=false;
 centeraxis=false;
+fabioin=false;
 
 %default outputs 
 fig=[];
@@ -103,7 +104,7 @@ for i=1:2:numel(args)
             FabioName=args{i+1};
             load('fabiocmps.mat','fabiocmps') %must have this file in the same folder
             cmp = fabiocmps.(FabioName);
-            colormap(cmp)
+            fabioin = true;
 
         case 'FigDim'
             if makefig
@@ -170,6 +171,7 @@ end
 
 %----------CREATE AXES----------
 if makefig
+    if fabioin;colormap(cmp);end
 for i=1:SubNum
     if SubNum>1;subplot(SubRows,SubCols,i);end
     hold on
@@ -194,7 +196,6 @@ end
 %-COLOR VEC--------------------
 if colorvecrequested
     cin=round(linspace(1,256,colorvecparts));
-    cmp=colormap;
     cvec=cmp(cin,:);
 end
 %------------------------------

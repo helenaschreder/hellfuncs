@@ -37,6 +37,15 @@ maxin = false;
 allframes = true;
 %------------------------
 
+% CHECK
+if isnumeric(i) % is a number
+    if mod(i,1)~=0 %is not an integer
+        error('Your second input should be your loop index.')
+    end
+else
+    error('Your second input should be your loop index.')
+end
+
 %--PARSE INPUT-----------
 if ~isempty(varargin) %|| ~isempty(varargin{1})
     for j=1:2:length(varargin)
